@@ -20,21 +20,16 @@ export default function FavoritesPage() {
     const loadFavorites = () => {
       try {
         const savedFavorites = localStorage.getItem('favoriteMemes')
-        console.log('Loading favorites from localStorage:', savedFavorites ? 'found data' : 'no data')
         if (savedFavorites && savedFavorites !== '[]' && savedFavorites !== 'null') {
           const parsed = JSON.parse(savedFavorites)
-          console.log('Parsed favorites:', parsed.length, 'items')
           if (Array.isArray(parsed) && parsed.length > 0) {
             // Sort by timestamp (newest first)
             const sorted = parsed.sort((a: FavoriteImage, b: FavoriteImage) => b.timestamp - a.timestamp)
             setFavorites(sorted)
-            console.log('Set favorites state with', sorted.length, 'items')
           } else {
-            console.log('Parsed data is empty or invalid')
             setFavorites([])
           }
         } else {
-          console.log('No valid favorites found in localStorage')
           setFavorites([])
         }
       } catch (error) {
@@ -50,7 +45,6 @@ export default function FavoritesPage() {
 
     // Also listen for the custom event to reload when favorites are updated
     const handleFavoritesUpdate = () => {
-      console.log('Favorites updated event received, reloading...')
       setTimeout(loadFavorites, 50) // Small delay to ensure localStorage is updated
     }
 
@@ -59,7 +53,6 @@ export default function FavoritesPage() {
     // Also listen for storage events from other tabs
     window.addEventListener('storage', (e) => {
       if (e.key === 'favoriteMemes') {
-        console.log('Storage event detected for favoriteMemes')
         loadFavorites()
       }
     })
@@ -99,7 +92,6 @@ export default function FavoritesPage() {
     // Update localStorage immediately
     try {
       localStorage.setItem('favoriteMemes', JSON.stringify(updatedFavorites))
-      console.log('Removed favorite, new count:', updatedFavorites.length)
     } catch (error) {
       console.error('Error updating localStorage:', error)
     }
@@ -113,7 +105,6 @@ export default function FavoritesPage() {
       // Update localStorage immediately
       try {
         localStorage.setItem('favoriteMemes', JSON.stringify([]))
-        console.log('Cleared all favorites')
       } catch (error) {
         console.error('Error clearing localStorage:', error)
       }
@@ -122,39 +113,6 @@ export default function FavoritesPage() {
     }
   }
 
-  const debugLocalStorage = () => {
-    const savedFavorites = localStorage.getItem('favoriteMemes')
-    console.log('=== DEBUG localStorage ===')
-    console.log('Raw localStorage value:', savedFavorites)
-    console.log('Type of raw value:', typeof savedFavorites)
-    console.log('Raw value length:', savedFavorites?.length)
-    
-    if (savedFavorites) {
-      try {
-        const parsed = JSON.parse(savedFavorites)
-        console.log('Parsed favorites:', parsed)
-        console.log('Parsed type:', typeof parsed)
-        console.log('Is array:', Array.isArray(parsed))
-        console.log('Number of favorites:', parsed.length)
-        
-        // Check each favorite item
-        parsed.forEach((fav: any, index: number) => {
-          console.log(`Favorite ${index}:`, {
-            id: fav.id,
-            hasImageData: !!fav.imageData,
-            imageDataLength: fav.imageData?.length,
-            timestamp: fav.timestamp
-          })
-        })
-      } catch (error) {
-        console.error('Error parsing favorites:', error)
-      }
-    } else {
-      console.log('No localStorage data found')
-    }
-    console.log('Current component state favorites:', favorites.length)
-    console.log('Current component state:', favorites)
-  }
 
   return (
     <main className="min-h-screen bg-stone-50 p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
@@ -165,22 +123,14 @@ export default function FavoritesPage() {
         >
           ← Back to Generator
         </Link>
-        <div className="flex gap-2">
+        {favorites.length > 0 && (
           <button
-            onClick={debugLocalStorage}
-            className="px-4 py-2 bg-stone-200 text-stone-500 rounded-lg hover:bg-stone-300 transition-colors text-sm border border-stone-300"
+            onClick={clearAllFavorites}
+            className="px-4 py-2 bg-stone-300 text-stone-700 rounded-lg hover:bg-stone-400 transition-colors border border-stone-300 font-medium"
           >
-            Debug
+            Clear All
           </button>
-          {favorites.length > 0 && (
-            <button
-              onClick={clearAllFavorites}
-              className="px-4 py-2 bg-stone-300 text-stone-700 rounded-lg hover:bg-stone-400 transition-colors border border-stone-300 font-medium"
-            >
-              Clear All
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       <h1 className="text-4xl font-bold mb-2 text-stone-700">
@@ -193,10 +143,6 @@ export default function FavoritesPage() {
         }
       </p>
       
-      {/* Debug info */}
-      <div className="mb-4 p-2 bg-stone-100 text-xs text-stone-500 rounded border border-stone-200">
-        Debug: favorites.length = {favorites.length}, localStorage key exists: {localStorage.getItem('favoriteMemes') ? 'yes' : 'no'}
-      </div>
 
       {favorites.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-lg border border-stone-200 shadow-sm">
