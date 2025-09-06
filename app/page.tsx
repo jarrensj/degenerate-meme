@@ -333,7 +333,7 @@ export default function Home() {
                     download={`image-${index + 1}.png`}
                     className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
                   >
-                    Download #{index + 1}
+                    {imageDataArray.length === 1 ? 'Download' : `Download #${index + 1}`}
                   </a>
                   <button
                     onClick={() => copyImageToClipboard(imgData, `image-${index}`)}
