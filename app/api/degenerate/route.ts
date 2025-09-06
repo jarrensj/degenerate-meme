@@ -69,12 +69,7 @@ export async function POST(req: NextRequest) {
     const imageDataArray: string[] = []
     
     for (const data of allResponses) {
-      // First check: direct data field (matches curl command expectation)
-      if (data.data) {
-        imageDataArray.push(data.data)
-      }
-      // Second check: candidates response structure
-      else if (data.candidates?.[0]?.content?.parts) {
+      if (data.candidates?.[0]?.content?.parts) {
         for (const part of data.candidates[0].content.parts) {
           if (part.inline_data?.data) {
             imageDataArray.push(part.inline_data.data)
