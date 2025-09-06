@@ -248,9 +248,6 @@ export default function Home() {
                 >
                   ×
                 </button>
-                <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                  Click, drag, or paste to replace
-                </div>
               </div>
             ) : (
               <div className="space-y-2 text-center">
