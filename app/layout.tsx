@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "hi",
-  description: "hi",
+  title: "degenerate.meme",
+  description: "generate memes with your image",
 };
 
 export default function RootLayout({
