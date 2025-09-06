@@ -16,7 +16,12 @@ export const stickerOptions: StickerOption[] = [
       'Create a happy meme sticker',
       'Create a celebration meme sticker',
       'Create a dancing meme sticker',
-      'Create a workout meme sticker'
+      'Create a workout meme sticker',
+      'Create a hungry meme sticker',
+      'Create a sad meme sticker',
+      'Create a angry meme sticker',
+      'Create a surprised meme sticker',
+      'Create a confused meme sticker',
     ]
   },
   {
@@ -41,6 +46,36 @@ export const stickerOptions: StickerOption[] = [
       'Create a motivational sticker with perseverance theme',
       'Create a motivational sticker with dream big theme',
       'Create a motivational sticker with positive vibes theme'
+    ]
+  },
+  {
+    id: 'miss_you',
+    label: 'Create I Miss You Sticker',
+    prompt: 'Create I miss you sticker',
+    description: 'Heartfelt missing someone expressions with cute and emotional designs',
+    variations: [
+      'Create an I miss you sticker with cute hearts',
+      'Create an I miss you sticker with sad but sweet expression',
+      'Create an I miss you sticker with distance theme',
+      'Create an I miss you sticker with longing expression',
+      'Create an I miss you sticker with thinking of you theme',
+      'Create an I miss you sticker with hugging theme',
+      'Create an I miss you sticker with letter/message theme'
+    ]
+  },
+  {
+    id: 'love_you',
+    label: 'Create I Love You Sticker',
+    prompt: 'Create I love you sticker',
+    description: 'Romantic and loving expressions with hearts, kisses, and affectionate designs',
+    variations: [
+      'Create an I love you sticker with big red hearts',
+      'Create an I love you sticker with cute couple theme',
+      'Create an I love you sticker with kisses and hearts',
+      'Create an I love you sticker with romantic flowers',
+      'Create an I love you sticker with sweet animals in love',
+      'Create an I love you sticker with sparkling hearts',
+      'Create an I love you sticker with love letter theme',
     ]
   }
 ];
