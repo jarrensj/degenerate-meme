@@ -165,7 +165,7 @@ export default function ImageUpload({
             <button
               type="button"
               onClick={removeImage}
-              className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg"
+              className="absolute top-2 right-2 bg-gray-800 bg-opacity-50 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-opacity-70 transition-opacity"
             >
               ×
             </button>
