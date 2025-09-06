@@ -3,6 +3,16 @@ import { getPromptsForQuantity } from "../../../data/stickerOptions"
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if API key is configured
+    const apiKey = process.env.GEMINI_API_KEY
+    if (!apiKey) {
+      console.error("GEMINI_API_KEY environment variable is not set")
+      return NextResponse.json({ 
+        error: "API key not configured", 
+        message: "The GEMINI_API_KEY environment variable is not set on this deployment. Please contact the administrator to configure the API key." 
+      }, { status: 500 })
+    }
+
     const { text, image, mimeType, imageCount = 1 } = await req.json()
     
     if (!text) {
@@ -35,7 +45,7 @@ export async function POST(req: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY || "",
+          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify({
           contents: [

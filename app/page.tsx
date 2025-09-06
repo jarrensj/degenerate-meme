@@ -59,7 +59,9 @@ export default function Home() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || 'Something went wrong')
+        // Show detailed message for API key errors, otherwise show generic error
+        const errorMessage = data.message || data.error || 'Something went wrong'
+        setError(errorMessage)
         return
       }
 
