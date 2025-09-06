@@ -9,7 +9,7 @@ export interface StickerOption {
 export const stickerOptions: StickerOption[] = [
   {
     id: 'meme',
-    label: 'Create Meme Sticker',
+    label: 'Meme Sticker',
     prompt: 'Create meme sticker',
     description: 'Funny memes with text and expressions',
     variations: [
@@ -26,7 +26,7 @@ export const stickerOptions: StickerOption[] = [
   },
   {
     id: 'christmas',
-    label: 'Create Christmas Sticker',
+    label: 'Christmas Sticker',
     prompt: 'Create Christmas sticker',
     description: 'Festive holiday themes with Santa, reindeer, snowflakes',
     variations: [
@@ -38,7 +38,7 @@ export const stickerOptions: StickerOption[] = [
   },
   {
     id: 'motivational',
-    label: 'Create Motivational Sticker',
+    label: 'Motivational Sticker',
     prompt: 'Create motivational sticker',
     description: 'Inspiring quotes and uplifting designs',
     variations: [
@@ -52,7 +52,7 @@ export const stickerOptions: StickerOption[] = [
   },
   {
     id: 'miss_you',
-    label: 'Create I Miss You Sticker',
+    label: 'I Miss You Sticker',
     prompt: 'Create I miss you sticker',
     description: 'Heartfelt missing someone expressions with cute and emotional designs',
     variations: [
@@ -68,7 +68,7 @@ export const stickerOptions: StickerOption[] = [
   },
   {
     id: 'love_you',
-    label: 'Create I Love You Sticker',
+    label: 'I Love You Sticker',
     prompt: 'Create I love you sticker',
     description: 'Romantic and loving expressions with hearts, kisses, and affectionate designs',
     variations: [
@@ -83,7 +83,7 @@ export const stickerOptions: StickerOption[] = [
   },
   {
     id: 'hungry',
-    label: 'Create I\'m Hungry Sticker',
+    label: 'I\'m Hungry Sticker',
     prompt: 'Create I\'m hungry sticker',
     description: 'Food cravings and hungry expressions with delicious treats and appetite themes',
     variations: [
