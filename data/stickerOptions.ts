@@ -46,18 +46,26 @@ export const stickerOptions: StickerOption[] = [
 ];
 
 // Helper function to get prompts based on selected option and quantity
-export const getPromptsForQuantity = (selectedPrompt: string, quantity: number): string[] => {
+export const getPromptsForQuantity = (selectedPrompt: string, quantity: number, hasUploadedImage: boolean = false): string[] => {
   const option = stickerOptions.find(opt => opt.prompt === selectedPrompt);
   if (!option) return Array(quantity).fill(selectedPrompt);
   
   const prompts: string[] = [];
   for (let i = 0; i < quantity; i++) {
+    let basePrompt: string;
     if (i < option.variations.length) {
-      prompts.push(option.variations[i]);
+      basePrompt = option.variations[i];
     } else {
       // If we need more than available variations, cycle through them
-      prompts.push(option.variations[i % option.variations.length]);
+      basePrompt = option.variations[i % option.variations.length];
     }
+    
+    // If user uploaded an image, modify the prompt to reference it
+    if (hasUploadedImage) {
+      basePrompt += ' based on the character or subject in the uploaded image';
+    }
+    
+    prompts.push(basePrompt);
   }
   
   return prompts;

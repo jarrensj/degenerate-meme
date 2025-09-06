@@ -15,7 +15,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Get different prompts for each image based on quantity
-    const prompts = getPromptsForQuantity(text, imageCount)
+    // !!image converts image (null or string) to boolean (false or true)
+    const prompts = getPromptsForQuantity(text, imageCount, !!image)
 
     // Function to make a single API call with specific prompt
     const makeApiCall = async (promptText: string) => {
