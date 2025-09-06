@@ -179,7 +179,7 @@ export default function Home() {
             tabIndex={0}
             className={`relative border-2 border-dashed rounded-lg transition-colors ${
               isDragOver 
-                ? 'border-blue-400 bg-blue-50' 
+                ? 'border-green-400 bg-green-50' 
                 : 'border-gray-300 hover:border-gray-400'
             } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${
               uploadedImagePreview ? 'p-2' : 'p-6'
@@ -240,7 +240,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setUseCustomInput(!useCustomInput)}
-              className="text-sm text-blue-600 hover:text-blue-800 underline"
+              className="text-sm text-green-600 hover:text-green-800 underline"
             >
               {useCustomInput ? 'Use presets' : 'Use custom input'}
             </button>
@@ -251,7 +251,7 @@ export default function Home() {
               value={customText}
               onChange={(e) => setCustomText(e.target.value)}
               placeholder="Enter your custom prompt here... (e.g., 'Create a sushi unicorn')"
-              className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
               rows={4}
               disabled={loading}
             />
@@ -260,7 +260,7 @@ export default function Home() {
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
               disabled={loading}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             >
               <option value="">Select an option...</option>
               {stickerOptions.map((option) => (
@@ -285,7 +285,7 @@ export default function Home() {
                 disabled={loading}
                 className={`flex-1 py-2 px-3 text-sm font-medium rounded-lg border transition-colors ${
                   imageCount === num
-                    ? 'bg-blue-600 text-white border-blue-600'
+                    ? 'bg-green-600 text-white border-green-600'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
@@ -298,7 +298,7 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading || !uploadedImage || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
+          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition-colors"
         >
           {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
         </button>
@@ -334,13 +334,13 @@ export default function Home() {
                   <a
                     href={`data:image/png;base64,${imgData}`}
                     download={`image-${index + 1}.png`}
-                    className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                    className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
                   >
                     {imageDataArray.length === 1 ? 'Download' : `Download #${index + 1}`}
                   </a>
                   <button
                     onClick={() => copyImageToClipboard(imgData, `image-${index}`)}
-                    className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
+                    className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
                   >
                     {copySuccess[`image-${index}`] ? '✓ Copied!' : 'Copy'}
                   </button>

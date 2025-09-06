@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdfcf8;
+  --foreground: #4a4a4a;
+  --sketch-border: #6b6b6b;
 }
 
 @theme inline {
@@ -14,8 +15,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1a1a;
+    --foreground: #e0e0e0;
+    --sketch-border: #666;
   }
 }
 
@@ -23,4 +25,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.sketch-element {
+  border: 1px solid var(--sketch-border);
+  border-radius: 6px;
+  position: relative;
+  background: var(--background);
+}
+
+.sketch-element::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border: 1px solid var(--sketch-border);
+  border-radius: 6px;
+  opacity: 0.2;
+  transform: rotate(0.2deg);
+  z-index: -1;
 }
