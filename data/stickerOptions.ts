@@ -45,7 +45,9 @@ export const stickerOptions: StickerOption[] = [
       'Create a motivational sticker with success theme',
       'Create a motivational sticker with perseverance theme',
       'Create a motivational sticker with dream big theme',
-      'Create a motivational sticker with positive vibes theme'
+      'Create a motivational sticker with positive vibes theme',
+      'Create a motivational sticker with confidence theme',
+      'Create a motivational sticker with hard work theme',
     ]
   },
   {
@@ -60,7 +62,8 @@ export const stickerOptions: StickerOption[] = [
       'Create an I miss you sticker with longing expression',
       'Create an I miss you sticker with thinking of you theme',
       'Create an I miss you sticker with hugging theme',
-      'Create an I miss you sticker with letter/message theme'
+      'Create an I miss you sticker with letter/message theme',
+      'Create an I miss you sticker with laying in bed theme'
     ]
   },
   {
@@ -76,6 +79,24 @@ export const stickerOptions: StickerOption[] = [
       'Create an I love you sticker with sweet animals in love',
       'Create an I love you sticker with sparkling hearts',
       'Create an I love you sticker with love letter theme',
+    ]
+  },
+  {
+    id: 'hungry',
+    label: 'Create I\'m Hungry Sticker',
+    prompt: 'Create I\'m hungry sticker',
+    description: 'Food cravings and hungry expressions with delicious treats and appetite themes',
+    variations: [
+      'Create an I\'m hungry sticker with sushi craving',
+      'Create an I\'m hungry sticker with pizza craving',
+      'Create an I\'m hungry sticker with burger and fries',
+      'Create an I\'m hungry sticker with cute hungry face',
+      'Create an I\'m hungry sticker with ice cream desire',
+      'Create an I\'m hungry sticker with taco theme',
+      'Create an I\'m hungry sticker with ramen noodles',
+      'Create an I\'m hungry sticker with donut obsession',
+      'Create an I\'m hungry sticker with midnight snack theme',
+      'Create an I\'m hungry sticker with growling stomach'
     ]
   }
 ];
