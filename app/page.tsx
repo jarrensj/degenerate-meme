@@ -5,7 +5,9 @@ import Image from 'next/image'
 
 
 export default function Home() {
-  const [text, setText] = useState('')
+  const [selectedOption, setSelectedOption] = useState('')
+  const [customText, setCustomText] = useState('')
+  const [useCustomInput, setUseCustomInput] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imageDataArray, setImageDataArray] = useState<string[]>([])
   const [imageCount, setImageCount] = useState<number>(1)
@@ -55,7 +57,8 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!text.trim()) return
+    const textToSend = useCustomInput ? customText : selectedOption
+    if (!textToSend.trim()) return
 
     setLoading(true)
     setError('')
@@ -82,7 +85,7 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          text,
+          text: textToSend,
           image: imageBase64,
           mimeType: uploadedImage?.type,
           imageCount: imageCount
@@ -118,14 +121,41 @@ export default function Home() {
 
       <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4">
         <div>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter your image prompt here... (e.g., 'Create a sushi unicorn' or 'Describe what you want to do with the uploaded image')"
-            className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            rows={4}
-            disabled={loading}
-          />
+          <div className="flex items-center justify-between mb-3">
+            <label className="block text-sm font-medium text-gray-700">
+              Choose what to create
+            </label>
+            <button
+              type="button"
+              onClick={() => setUseCustomInput(!useCustomInput)}
+              className="text-sm text-blue-600 hover:text-blue-800 underline"
+            >
+              {useCustomInput ? 'Use presets' : 'Use custom input'}
+            </button>
+          </div>
+          
+          {useCustomInput ? (
+            <textarea
+              value={customText}
+              onChange={(e) => setCustomText(e.target.value)}
+              placeholder="Enter your custom prompt here... (e.g., 'Create a sushi unicorn')"
+              className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows={4}
+              disabled={loading}
+            />
+          ) : (
+            <select
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
+              disabled={loading}
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select an option...</option>
+              <option value="Create meme sticker">Create Meme Sticker</option>
+              <option value="Create Christmas sticker">Create Christmas Sticker</option>
+              <option value="Create motivational sticker">Create Motivational Sticker</option>
+            </select>
+          )}
         </div>
 
         <div>
@@ -178,7 +208,7 @@ export default function Home() {
         
         <button
           type="submit"
-          disabled={loading || !text.trim()}
+          disabled={loading || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
         >
           {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
