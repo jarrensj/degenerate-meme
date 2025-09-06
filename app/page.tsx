@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import JSConfetti from 'js-confetti'
 import ImageUpload from '../components/ImageUpload'
 import PromptSelector from '../components/PromptSelector'
 import ImageCountSelector from '../components/ImageCountSelector'
@@ -18,6 +19,13 @@ export default function Home() {
   const [error, setError] = useState('')
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
   const [uploadedImageType, setUploadedImageType] = useState<string | null>(null)
+  const [jsConfetti, setJsConfetti] = useState<JSConfetti | null>(null)
+
+  // Initialize confetti
+  useEffect(() => {
+    const confetti = new JSConfetti()
+    setJsConfetti(confetti)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,6 +64,14 @@ export default function Home() {
 
       if (data.imageDataArray && data.imageDataArray.length > 0) {
         setImageDataArray(data.imageDataArray)
+        // Trigger confetti when generation is successful
+        if (jsConfetti) {
+          jsConfetti.addConfetti({
+            emojis: ['🚀', '✨'],
+            emojiSize: 100,
+            confettiNumber: 24,
+          })
+        }
       }
     } catch (error) {
       console.error('Network error:', error)
