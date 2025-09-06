@@ -30,7 +30,7 @@ export default function PromptSelector({
         <button
           type="button"
           onClick={() => setUseCustomInput(!useCustomInput)}
-          className="text-xs text-green-600 hover:text-green-800 underline"
+          className="text-xs text-green-600 hover:text-green-800"
         >
           {useCustomInput ? 'Use presets' : 'Use custom input'}
         </button>
