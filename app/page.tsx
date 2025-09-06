@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import JSConfetti from 'js-confetti'
+import Typewriter from 'typewriter-effect'
 import ImageUpload from '../components/ImageUpload'
 import PromptSelector from '../components/PromptSelector'
 import ImageCountSelector from '../components/ImageCountSelector'
@@ -86,9 +87,21 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-2">
         degenerate.meme ✨
       </h1>
-      <p className="text-lg mb-4 text-gray-600">
-        generate memes
-      </p>
+      <div className="text-lg mb-4 text-gray-600">
+        <Typewriter
+          options={{
+            strings: [
+              'generate memes with your IP',
+              'generate memes for your brand',
+              'generate memes to express how you feel'
+            ],
+            autoStart: true,
+            loop: true,
+            delay: 50,
+            deleteSpeed: 25,
+          }}
+        />
+      </div>
 
       <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
         <ImageUpload
