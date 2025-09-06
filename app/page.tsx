@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import JSConfetti from 'js-confetti'
 import Typewriter from 'typewriter-effect'
+import Link from 'next/link'
 import ImageUpload from '../components/ImageUpload'
 import PromptSelector from '../components/PromptSelector'
 import ImageCountSelector from '../components/ImageCountSelector'
@@ -21,11 +22,43 @@ export default function Home() {
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
   const [uploadedImageType, setUploadedImageType] = useState<string | null>(null)
   const [jsConfetti, setJsConfetti] = useState<JSConfetti | null>(null)
+  const [favoritesCount, setFavoritesCount] = useState(0)
 
   // Initialize confetti
   useEffect(() => {
     const confetti = new JSConfetti()
     setJsConfetti(confetti)
+  }, [])
+
+  // Track favorites count
+  useEffect(() => {
+    const updateFavoritesCount = () => {
+      try {
+        const savedFavorites = localStorage.getItem('favoriteMemes')
+        if (savedFavorites) {
+          const favorites = JSON.parse(savedFavorites)
+          setFavoritesCount(favorites.length)
+        } else {
+          setFavoritesCount(0)
+        }
+      } catch (error) {
+        setFavoritesCount(0)
+      }
+    }
+
+    // Update count on mount
+    updateFavoritesCount()
+
+    // Listen for custom events (when favorites are updated)
+    const handleFavoritesUpdate = () => {
+      updateFavoritesCount()
+    }
+
+    window.addEventListener('favoritesUpdated', handleFavoritesUpdate)
+
+    return () => {
+      window.removeEventListener('favoritesUpdated', handleFavoritesUpdate)
+    }
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,7 +117,19 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
+    <main className="min-h-screen p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto relative">
+      <Link
+        href="/favorites"
+        className="absolute top-8 right-8 flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+      >
+        <span>Favorites</span>
+        {favoritesCount > 0 && (
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+            {favoritesCount}
+          </span>
+        )}
+      </Link>
+      
       <h1 className="text-4xl font-bold mb-2">
         degenerate.meme ✨
       </h1>
