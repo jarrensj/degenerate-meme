@@ -3,32 +3,16 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-// Define types for API response
-interface GeminiPart {
-  text?: string;
-  inline_data?: { data: string; mimeType: string };
-  inlineData?: { data: string; mimeType: string };
-}
-
-interface GeminiCandidate {
-  content?: {
-    parts?: GeminiPart[];
-  };
-}
-
-interface GeminiResponse {
-  candidates?: GeminiCandidate[];
-  data?: string;
-}
 
 export default function Home() {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<GeminiResponse | null>(null)
-  const [imageData, setImageData] = useState<string | null>(null)
+  const [imageDataArray, setImageDataArray] = useState<string[]>([])
+  const [imageCount, setImageCount] = useState<number>(1)
   const [error, setError] = useState('')
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
+  const [copySuccess, setCopySuccess] = useState<{[key: string]: boolean}>({})
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -47,14 +31,35 @@ export default function Home() {
     setUploadedImagePreview(null)
   }
 
+  const copyImageToClipboard = async (imageData: string, imageId: string) => {
+    try {
+      // Convert base64 to blob
+      const response = await fetch(`data:image/png;base64,${imageData}`)
+      const blob = await response.blob()
+      
+      // Create ClipboardItem and copy to clipboard
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob })
+      ])
+      
+      // Show success feedback
+      setCopySuccess(prev => ({ ...prev, [imageId]: true }))
+      setTimeout(() => {
+        setCopySuccess(prev => ({ ...prev, [imageId]: false }))
+      }, 2000)
+    } catch (error) {
+      console.error('Failed to copy image:', error)
+      setError('Failed to copy image to clipboard')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!text.trim()) return
 
     setLoading(true)
     setError('')
-    setResult(null)
-    setImageData(null)
+    setImageDataArray([])
 
     try {
       let imageBase64 = null
@@ -79,7 +84,8 @@ export default function Home() {
         body: JSON.stringify({ 
           text,
           image: imageBase64,
-          mimeType: uploadedImage?.type 
+          mimeType: uploadedImage?.type,
+          imageCount: imageCount
         }),
       })
 
@@ -90,9 +96,8 @@ export default function Home() {
         return
       }
 
-      setResult(data.data)
-      if (data.imageData) {
-        setImageData(data.imageData)
+      if (data.imageDataArray && data.imageDataArray.length > 0) {
+        setImageDataArray(data.imageDataArray)
       }
     } catch (error) {
       console.error('Network error:', error)
@@ -121,6 +126,23 @@ export default function Home() {
             rows={4}
             disabled={loading}
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Number of images to generate
+          </label>
+          <select
+            value={imageCount}
+            onChange={(e) => setImageCount(Number(e.target.value))}
+            disabled={loading}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
+          >
+            <option value={1}>1 image</option>
+            <option value={2}>2 images</option>
+            <option value={3}>3 images</option>
+            <option value={4}>4 images</option>
+          </select>
         </div>
 
         <div>
@@ -159,7 +181,7 @@ export default function Home() {
           disabled={loading || !text.trim()}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
         >
-          {loading ? 'Generating Image...' : 'Generate Image'}
+          {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
         </button>
       </form>
 
@@ -169,46 +191,47 @@ export default function Home() {
         </div>
       )}
 
-      {imageData && (
-        <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-2xl">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Generated Image:</h3>
-          <div className="flex justify-center mb-4">
-            <Image 
-              src={`data:image/png;base64,${imageData}`} 
-              alt="generated image" 
-              width={500}
-              height={500}
-              className="max-w-full h-auto rounded-lg shadow-lg"
-            />
-          </div>
-          <div className="flex gap-2 justify-center">
-            <a
-              href={`data:image/png;base64,${imageData}`}
-              download="image.png"
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-            >
-              Download Image
-            </a>
-          </div>
-        </div>
-      )}
-
-      {result && !imageData && (
-        <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-2xl">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Generated Content:</h3>
-          <div className="space-y-4">
-            {result.candidates?.map((candidate: GeminiCandidate, index: number) => (
-              <div key={index} className="bg-white p-4 rounded border">
-                {candidate.content?.parts?.map((part: GeminiPart, partIndex: number) => (
-                  <div key={partIndex} className="text-gray-700 whitespace-pre-wrap">
-                    {part.text}
-                  </div>
-                ))}
+      {imageDataArray.length > 0 && (
+        <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-4xl">
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">
+            Generated Image{imageDataArray.length > 1 ? 's' : ''}:
+          </h3>
+          <div className={`grid gap-4 mb-4 ${
+            imageDataArray.length === 1 ? 'grid-cols-1 justify-items-center' :
+            imageDataArray.length === 2 ? 'grid-cols-2' :
+            imageDataArray.length <= 4 ? 'grid-cols-2' :
+            'grid-cols-3'
+          }`}>
+            {imageDataArray.map((imgData, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <Image 
+                  src={`data:image/png;base64,${imgData}`} 
+                  alt={`generated image ${index + 1}`} 
+                  width={imageDataArray.length === 1 ? 500 : 300}
+                  height={imageDataArray.length === 1 ? 500 : 300}
+                  className="w-full h-auto rounded-lg shadow-lg"
+                />
+                <div className="flex gap-2 mt-2">
+                  <a
+                    href={`data:image/png;base64,${imgData}`}
+                    download={`image-${index + 1}.png`}
+                    className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                  >
+                    Download #{index + 1}
+                  </a>
+                  <button
+                    onClick={() => copyImageToClipboard(imgData, `image-${index}`)}
+                    className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
+                  >
+                    {copySuccess[`image-${index}`] ? '✓ Copied!' : 'Copy'}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
+
     </main>
   );
 }

@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, image, mimeType } = await req.json()
+    const { text, image, mimeType, imageCount = 1 } = await req.json()
     
     if (!text) {
       return NextResponse.json({ error: "Text input is required" }, { status: 400 })
+    }
+
+    // Validate imageCount
+    if (imageCount < 1 || imageCount > 4) {
+      return NextResponse.json({ error: "Image count must be between 1 and 4" }, { status: 400 })
     }
 
     // Build the parts array - always include text, optionally include image
@@ -20,50 +25,74 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": process.env.GEMINI_API_KEY || "",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: parts
-          }
-        ]
+    // Function to make a single API call
+    const makeApiCall = async () => {
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": process.env.GEMINI_API_KEY || "",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: parts
+            }
+          ]
+        })
       })
-    })
 
-    const data = await response.json()
-    
-    if (!response.ok) {
-      console.error("Gemini API Error:", data)
-      return NextResponse.json({ error: "Failed to generate content", details: data }, { status: response.status })
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(`API call failed: ${JSON.stringify(data)}`)
+      }
+
+      return data
     }
 
-    // Extract base64 image data if present
-    let imageData = null
-    
-    // First check: direct data field (matches curl command expectation)
-    if (data.data) {
-      imageData = data.data
+    // Make multiple API calls if needed
+    const apiCalls = []
+    for (let i = 0; i < imageCount; i++) {
+      apiCalls.push(makeApiCall())
     }
-    // Second check: candidates response structure
-    else if (data.candidates?.[0]?.content?.parts) {
-      for (const part of data.candidates[0].content.parts) {
-        if (part.inline_data?.data) {
-          imageData = part.inline_data.data
-          break
-        }
-        if (part.inlineData?.data) {
-          imageData = part.inlineData.data
-          break
+
+    let allResponses
+    try {
+      allResponses = await Promise.all(apiCalls)
+    } catch (error) {
+      console.error("Gemini API Error:", error)
+      return NextResponse.json({ error: "Failed to generate content", details: error }, { status: 500 })
+    }
+
+    // Extract base64 image data from all responses
+    const imageDataArray: string[] = []
+    
+    for (const data of allResponses) {
+      // First check: direct data field (matches curl command expectation)
+      if (data.data) {
+        imageDataArray.push(data.data)
+      }
+      // Second check: candidates response structure
+      else if (data.candidates?.[0]?.content?.parts) {
+        for (const part of data.candidates[0].content.parts) {
+          if (part.inline_data?.data) {
+            imageDataArray.push(part.inline_data.data)
+            break
+          }
+          if (part.inlineData?.data) {
+            imageDataArray.push(part.inlineData.data)
+            break
+          }
         }
       }
     }
 
-    return NextResponse.json({ success: true, data, imageData })
+    // Return the array of images
+    return NextResponse.json({ 
+      success: true, 
+      imageDataArray: imageDataArray
+    })
   } catch (error) {
     console.error("Error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
