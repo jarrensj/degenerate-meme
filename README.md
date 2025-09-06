@@ -9,7 +9,9 @@ A custom sticker generator that creates unique stickers!
 - **Convenient**: Stores your last used character in local storage for convenient future generations with your IP
 - **Generation (Form Progress) Bar**: The generate button is a progress bar showing form completion status 
 - **Progress Bar**: After starting generation, the Generation button also turns into Generating Progress Bar (Image Generation progress)
+- **Nano Banana**: Uses Nano Banana for image generation
 - **Duplicate Prevention**: When generating multiple stickers of the same theme (like Christmas), added prompting helps ensures variety while maintaining the theme to avoid duplicates
+- **drag and drop or paste**: Ability to drag and drop or just paste your image from your clipboard to the Image Uploader section of the form
 
 ## how to run the project 
 
