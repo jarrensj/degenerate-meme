@@ -129,11 +129,7 @@ export default function ImageUpload({
   }
 
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {uploadedImagePreview ? 'Replace your character' : 'Upload your character'}
-      </label>
-      
+    <div className="max-w-xs mx-auto">
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

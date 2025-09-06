@@ -12,8 +12,8 @@ export default function ImageCountSelector({
   loading
 }: ImageCountSelectorProps) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-3">
+    <div className="max-w-xs mx-auto">
+      <label className="block text-xs font-medium text-gray-700 mb-3">
         Number of images to generate
       </label>
       <div className="flex gap-2">

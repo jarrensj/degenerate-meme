@@ -23,10 +23,11 @@ export default function GenerateButton({
     (useCustomInput && !customText.trim())
 
   return (
-    <button
-      type="submit"
-      disabled={isDisabled}
-      className="matcha-progress-button w-full py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed sketch-element"
+    <div className="max-w-xs mx-auto">
+      <button
+        type="submit"
+        disabled={isDisabled}
+        className="matcha-progress-button w-full py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed sketch-element"
     >
       {/* Calculate form completion progress */}
       {(() => {
@@ -106,5 +107,6 @@ export default function GenerateButton({
       );
     })()}
     </button>
+    </div>
   )
 }

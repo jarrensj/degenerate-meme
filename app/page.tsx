@@ -67,11 +67,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-4">
-        degenerate.meme
+      <h1 className="text-4xl font-bold mb-2">
+        degenerate.meme ✨
       </h1>
-      <p className="text-lg mb-8 text-gray-600">
-        turn your images into memes and stickers
+      <p className="text-lg mb-4 text-gray-600">
+        generate memes
       </p>
 
       <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">

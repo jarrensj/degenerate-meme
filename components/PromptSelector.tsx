@@ -22,15 +22,15 @@ export default function PromptSelector({
   loading
 }: PromptSelectorProps) {
   return (
-    <div>
+    <div className="max-w-xs mx-auto">
       <div className="flex items-center justify-between mb-3">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-xs font-medium text-gray-700">
           Choose what to create
         </label>
         <button
           type="button"
           onClick={() => setUseCustomInput(!useCustomInput)}
-          className="text-sm text-green-600 hover:text-green-800 underline"
+          className="text-xs text-green-600 hover:text-green-800 underline"
         >
           {useCustomInput ? 'Use presets' : 'Use custom input'}
         </button>
