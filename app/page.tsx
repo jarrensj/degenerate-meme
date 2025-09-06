@@ -251,7 +251,7 @@ export default function Home() {
               value={customText}
               onChange={(e) => setCustomText(e.target.value)}
               placeholder="Enter your custom prompt here... (e.g., 'Create a sushi unicorn')"
-              className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={4}
               disabled={loading}
             />
@@ -260,7 +260,7 @@ export default function Home() {
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
               disabled={loading}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Select an option...</option>
               {stickerOptions.map((option) => (
@@ -300,43 +300,51 @@ export default function Home() {
           disabled={loading || !uploadedImage || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
           className="matcha-progress-button w-full py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed sketch-element"
         >
-          {/* Calculate form completion progress */}
-          {(() => {
-            const hasImage = !!uploadedImage;
-            const hasPrompt = useCustomInput ? !!customText.trim() : !!selectedOption.trim();
-            const hasImageCount = imageCount > 0;
-            
-            const completedSteps = [hasImage, hasPrompt, hasImageCount].filter(Boolean).length;
-            const formProgress = (completedSteps / 3) * 100;
-            
-            return (
-              <>
-                {/* Progress fill - shows form completion + full when loading */}
-                <div 
-                  className="absolute inset-1 transition-all duration-700 ease-out rounded-md overflow-hidden"
-                  style={{ 
-                    width: loading ? 'calc(100% - 8px)' : `calc(${formProgress}% - 8px)`,
-                  }}
-                >
-                  {/* Animated matcha gradient wave background */}
-                  <div
-                    className="absolute inset-0 rounded-md"
-                    style={{
-                      background: loading 
-                        ? `linear-gradient(135deg, 
-                            #5cb3a6 0%, 
-                            #7ec5ba 25%,
-                            #4a9b8e 50%,
-                            #7ec5ba 75%, 
-                            #5cb3a6 100%)`
-                        : `linear-gradient(135deg, 
-                            rgba(92, 179, 166, 0.6) 0%, 
-                            rgba(92, 179, 166, 0.8) 50%,
-                            rgba(92, 179, 166, 0.6) 100%)`,
-                      backgroundSize: loading ? '200% 100%' : '100% 100%',
-                      animation: loading ? 'gradient-wave 2.5s ease-in-out infinite' : 'none'
+            {/* Calculate form completion progress */}
+            {(() => {
+              const hasImage = !!uploadedImage;
+              const hasPrompt = useCustomInput ? !!customText.trim() : !!selectedOption.trim();
+              const hasImageCount = imageCount > 0;
+
+              const completedSteps = [hasImage, hasPrompt, hasImageCount].filter(Boolean).length;
+              const formProgress = (completedSteps / 3) * 100;
+              
+              return (
+                <>
+                  {/* Progress fill - shows form completion + full when loading */}
+                  <div 
+                    className="absolute inset-1 transition-all duration-700 ease-out rounded-md"
+                    style={{ 
+                      width: loading ? 'calc(100% - 8px)' : `calc(${formProgress}% - 8px)`,
                     }}
-                  />
+                  >
+                    <div className="absolute inset-0 rounded-md overflow-hidden"
+                      style={{
+                        animation: (() => {
+                          const isFormComplete = hasImage && hasPrompt && hasImageCount;
+                          return !loading && isFormComplete && formProgress === 100 ? 'rainbow-glow 6s ease-in-out infinite' : 'none';
+                        })()
+                      }}
+                    >
+                      {/* Animated matcha gradient wave background */}
+                      <div
+                        className="absolute inset-0 rounded-md"
+                        style={{
+                          background: loading 
+                            ? `linear-gradient(135deg, 
+                                #5cb3a6 0%, 
+                                #7ec5ba 25%,
+                                #4a9b8e 50%,
+                                #7ec5ba 75%, 
+                                #5cb3a6 100%)`
+                            : `linear-gradient(135deg, 
+                                rgba(92, 179, 166, 0.6) 0%, 
+                                rgba(92, 179, 166, 0.8) 50%,
+                                rgba(92, 179, 166, 0.6) 100%)`,
+                          backgroundSize: loading ? '200% 100%' : '100% 100%',
+                          animation: loading ? 'gradient-wave 2.5s ease-in-out infinite' : 'none'
+                        }}
+                      />
                   
                   {/* Subtle textured overlay for hand-drawn feel */}
                   {loading && (
@@ -354,6 +362,7 @@ export default function Home() {
                       }}
                     />
                   )}
+                  </div>
                 </div>
                 
                 {/* Button content */}

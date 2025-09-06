@@ -97,9 +97,32 @@ body {
   }
 }
 
+@keyframes rainbow-glow {
+  0% {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.6), 0 0 20px rgba(255, 107, 107, 0.4);
+  }
+  16% {
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.6), 0 0 20px rgba(78, 205, 196, 0.4);
+  }
+  32% {
+    box-shadow: 0 0 0 3px rgba(69, 183, 209, 0.6), 0 0 20px rgba(69, 183, 209, 0.4);
+  }
+  48% {
+    box-shadow: 0 0 0 3px rgba(150, 206, 180, 0.6), 0 0 20px rgba(150, 206, 180, 0.4);
+  }
+  64% {
+    box-shadow: 0 0 0 3px rgba(254, 202, 87, 0.6), 0 0 20px rgba(254, 202, 87, 0.4);
+  }
+  80% {
+    box-shadow: 0 0 0 3px rgba(255, 159, 243, 0.6), 0 0 20px rgba(255, 159, 243, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.6), 0 0 20px rgba(255, 107, 107, 0.4);
+  }
+}
+
 .matcha-progress-button {
   position: relative;
-  overflow: hidden;
   background-color: var(--warm-white);
   border: 2px solid var(--soft-gray);
   transition: all 0.3s ease;
