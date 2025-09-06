@@ -17,7 +17,7 @@ interface FavoriteImage {
 export default function ResultsDisplay({ imageDataArray }: ResultsDisplayProps) {
   const [copySuccess, setCopySuccess] = useState<{[key: string]: boolean}>({})
   const [favorites, setFavorites] = useState<FavoriteImage[]>([])
-  const [favoriteSuccess, setFavoriteSuccess] = useState<{[key: string]: boolean}>({})
+  const [favoriteSuccess, setFavoriteSuccess] = useState<{[key: string]: boolean | string}>({})
 
   // Load favorites from localStorage on component mount
   useEffect(() => {
@@ -188,12 +188,14 @@ export default function ResultsDisplay({ imageDataArray }: ResultsDisplayProps) 
                   }`} 
                 />
                 <span className={`text-xs ${
+                  favoriteSuccess[`image-${index}`] === 'error' ? 'text-red-500' :
                   favoriteSuccess[`image-${index}`] ? 'text-green-500' :
                   isFavorited(imgData)
                     ? 'text-yellow-500' 
                     : 'text-gray-400 group-hover:text-yellow-500'
                 }`}>
-                  {favoriteSuccess[`image-${index}`] ? 'Saved!' : 
+                  {favoriteSuccess[`image-${index}`] === 'error' ? 'Error!' :
+                   favoriteSuccess[`image-${index}`] ? 'Saved!' : 
                    isFavorited(imgData) ? 'Favorited :)' : 'Favorite'}
                 </span>
               </button>
