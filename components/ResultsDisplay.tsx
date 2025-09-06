@@ -61,7 +61,7 @@ export default function ResultsDisplay({ imageDataArray }: ResultsDisplayProps) 
                 download={`image-${index + 1}.png`}
                 className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
               >
-                {imageDataArray.length === 1 ? 'Download' : `Download #${index + 1}`}
+                Download
               </a>
               <button
                 onClick={() => copyImageToClipboard(imgData, `image-${index}`)}
