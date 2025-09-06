@@ -8,6 +8,25 @@ export default function Home() {
   const [result, setResult] = useState<any>(null)
   const [imageData, setImageData] = useState<string | null>(null)
   const [error, setError] = useState('')
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null)
+  const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setUploadedImage(file)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setUploadedImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const removeImage = () => {
+    setUploadedImage(null)
+    setUploadedImagePreview(null)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,12 +38,30 @@ export default function Home() {
     setImageData(null)
 
     try {
+      let imageBase64 = null
+      if (uploadedImage) {
+        const reader = new FileReader()
+        imageBase64 = await new Promise<string>((resolve) => {
+          reader.onload = () => {
+            const result = reader.result as string
+            // Remove the data URL prefix to get just the base64 data
+            const base64Data = result.split(',')[1]
+            resolve(base64Data)
+          }
+          reader.readAsDataURL(uploadedImage)
+        })
+      }
+
       const response = await fetch('/api/degenerate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ 
+          text,
+          image: imageBase64,
+          mimeType: uploadedImage?.type 
+        }),
       })
 
       const data = await response.json()
@@ -59,11 +96,40 @@ export default function Home() {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Enter your image prompt here... (e.g., 'Create a sushi unicorn')"
+            placeholder="Enter your image prompt here... (e.g., 'Create a sushi unicorn' or 'Describe what you want to do with the uploaded image')"
             className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             rows={4}
             disabled={loading}
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Upload an image (optional)
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={loading}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {uploadedImagePreview && (
+            <div className="mt-3 relative">
+              <img 
+                src={uploadedImagePreview} 
+                alt="uploaded preview" 
+                className="max-w-full h-48 object-contain rounded-lg border"
+              />
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+              >
+                ×
+              </button>
+            </div>
+          )}
         </div>
         
         <button

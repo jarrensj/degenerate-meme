@@ -2,10 +2,22 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { text } = await req.json()
+    const { text, image, mimeType } = await req.json()
     
     if (!text) {
       return NextResponse.json({ error: "Text input is required" }, { status: 400 })
+    }
+
+    // Build the parts array - always include text, optionally include image
+    const parts: any[] = [{ text: text }]
+    
+    if (image && mimeType) {
+      parts.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: image
+        }
+      })
     }
 
     const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", {
@@ -17,11 +29,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         contents: [
           {
-            parts: [
-              {
-                text: text
-              }
-            ]
+            parts: parts
           }
         ]
       })
