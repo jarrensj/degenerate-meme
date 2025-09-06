@@ -40,7 +40,7 @@ export default function PromptSelector({
         <textarea
           value={customText}
           onChange={(e) => setCustomText(e.target.value)}
-          placeholder="Enter your custom prompt here... (e.g., 'Create a sushi unicorn')"
+          placeholder="Enter your custom prompt here... (e.g., 'Create a sticker to express my love for sushi')"
           className="w-full p-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           rows={4}
           disabled={loading}
