@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 // Define types for API response
 interface GeminiPart {
@@ -135,9 +136,11 @@ export default function Home() {
           />
           {uploadedImagePreview && (
             <div className="mt-3 relative">
-              <img 
+              <Image 
                 src={uploadedImagePreview} 
                 alt="uploaded preview" 
+                width={400}
+                height={192}
                 className="max-w-full h-48 object-contain rounded-lg border"
               />
               <button
@@ -170,9 +173,11 @@ export default function Home() {
         <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-2xl">
           <h3 className="text-lg font-semibold mb-4 text-gray-800">Generated Image:</h3>
           <div className="flex justify-center mb-4">
-            <img 
+            <Image 
               src={`data:image/png;base64,${imageData}`} 
               alt="generated image" 
+              width={500}
+              height={500}
               className="max-w-full h-auto rounded-lg shadow-lg"
             />
           </div>
