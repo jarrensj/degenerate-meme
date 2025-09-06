@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getPromptsForQuantity } from "../../../data/stickerOptions"
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,20 +14,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Image count must be between 1 and 4" }, { status: 400 })
     }
 
-    // Build the parts array - always include text, optionally include image
-    const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [{ text: text }]
-    
-    if (image && mimeType) {
-      parts.push({
-        inlineData: {
-          mimeType: mimeType,
-          data: image
-        }
-      })
-    }
+    // Get different prompts for each image based on quantity
+    const prompts = getPromptsForQuantity(text, imageCount)
 
-    // Function to make a single API call
-    const makeApiCall = async () => {
+    // Function to make a single API call with specific prompt
+    const makeApiCall = async (promptText: string) => {
+      const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [{ text: promptText }]
+      
+      if (image && mimeType) {
+        parts.push({
+          inlineData: {
+            mimeType: mimeType,
+            data: image
+          }
+        })
+      }
+
       const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent", {
         method: "POST",
         headers: {
@@ -51,11 +54,8 @@ export async function POST(req: NextRequest) {
       return data
     }
 
-    // Make multiple API calls if needed
-    const apiCalls = []
-    for (let i = 0; i < imageCount; i++) {
-      apiCalls.push(makeApiCall())
-    }
+    // Make API calls with different prompts
+    const apiCalls = prompts.map((prompt: string) => makeApiCall(prompt))
 
     let allResponses
     try {
