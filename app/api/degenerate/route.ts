@@ -45,30 +45,22 @@ export async function POST(req: NextRequest) {
     // Extract base64 image data if present
     let imageData = null
     
-    // Check multiple possible locations for image data
-    if (data.candidates?.[0]?.content?.parts) {
+    // First check: direct data field (matches curl command expectation)
+    if (data.data) {
+      imageData = data.data
+    }
+    // Second check: candidates response structure
+    else if (data.candidates?.[0]?.content?.parts) {
       for (const part of data.candidates[0].content.parts) {
-        // Check inlineData.data
-        if (part.inlineData?.data) {
-          imageData = part.inlineData.data
-          break
-        }
-        // Check inline_data.data (snake_case variant)
         if (part.inline_data?.data) {
           imageData = part.inline_data.data
           break
         }
-        // Check if data is directly in the part
-        if (part.data) {
-          imageData = part.data
+        if (part.inlineData?.data) {
+          imageData = part.inlineData.data
           break
         }
       }
-    }
-    
-    // Check if there's a direct data field at root level
-    if (!imageData && data.data) {
-      imageData = data.data
     }
 
     return NextResponse.json({ success: true, data, imageData })
