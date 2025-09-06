@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { stickerOptions } from '../data/stickerOptions'
 
 
 export default function Home() {
@@ -151,9 +152,11 @@ export default function Home() {
               className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Select an option...</option>
-              <option value="Create meme sticker">Create Meme Sticker</option>
-              <option value="Create Christmas sticker">Create Christmas Sticker</option>
-              <option value="Create motivational sticker">Create Motivational Sticker</option>
+              {stickerOptions.map((option) => (
+                <option key={option.id} value={option.prompt}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           )}
         </div>
