@@ -1,26 +1,129 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --neon-pink: #ff00ff;
+  --acid-green: #39ff14;
+  --radioactive-yellow: #dfff00;
+  --glitch-purple: #8a2be2;
+  --acid-blue: #00ffff;
+  --dirty-green: #556b2f;
+  --over-bright-white: #ffffff;
+  --corrupt-red: #ff073a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(45deg, var(--neon-pink) 0%, var(--acid-green) 25%, var(--radioactive-yellow) 50%, var(--glitch-purple) 75%, var(--acid-blue) 100%);
+  background-size: 400% 400%;
+  animation: chaotic-bg 3s ease-in-out infinite;
+  color: var(--over-bright-white);
+  font-family: 'Comic Sans MS', cursive, monospace;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 0, 255, 0.1) 30deg, transparent 60deg),
+    repeating-linear-gradient(45deg, transparent 0px, rgba(57, 255, 20, 0.05) 2px, transparent 4px),
+    radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 7, 58, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px);
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+@keyframes chaotic-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glitch-text {
+  0%, 100% { 
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% { 
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% { 
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% { 
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% { 
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes corrupt-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.glitch-text {
+  animation: glitch-text 0.3s infinite;
+  text-shadow: 
+    2px 0 var(--neon-pink),
+    -2px 0 var(--acid-blue),
+    0 2px var(--radioactive-yellow),
+    0 -2px var(--corrupt-red);
+}
+
+.corrupt-border {
+  border: 3px solid;
+  border-image: linear-gradient(45deg, var(--neon-pink), var(--acid-green), var(--radioactive-yellow), var(--glitch-purple)) 1;
+  box-shadow: 
+    0 0 20px var(--neon-pink),
+    inset 0 0 20px rgba(255, 0, 255, 0.1);
+}
+
+.jpeg-artifact {
+  filter: contrast(1.5) saturate(2) brightness(1.2);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.chaotic-shadow {
+  box-shadow: 
+    5px 5px 0px var(--neon-pink),
+    10px 10px 0px var(--acid-green),
+    15px 15px 0px var(--radioactive-yellow),
+    20px 20px 0px var(--glitch-purple);
+}
+
+.unstable-text {
+  font-family: 'Creepster', cursive;
+  letter-spacing: 3px;
+  transform: skew(-5deg, 2deg);
 }
