@@ -2,10 +2,28 @@
 
 import { useState } from 'react'
 
+// Define types for API response
+interface GeminiPart {
+  text?: string;
+  inline_data?: { data: string; mimeType: string };
+  inlineData?: { data: string; mimeType: string };
+}
+
+interface GeminiCandidate {
+  content?: {
+    parts?: GeminiPart[];
+  };
+}
+
+interface GeminiResponse {
+  candidates?: GeminiCandidate[];
+  data?: string;
+}
+
 export default function Home() {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<GeminiResponse | null>(null)
   const [imageData, setImageData] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
@@ -75,7 +93,8 @@ export default function Home() {
       if (data.imageData) {
         setImageData(data.imageData)
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Network error:', error)
       setError('Network error occurred')
     } finally {
       setLoading(false)
@@ -173,9 +192,9 @@ export default function Home() {
         <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-2xl">
           <h3 className="text-lg font-semibold mb-4 text-gray-800">Generated Content:</h3>
           <div className="space-y-4">
-            {result.candidates?.map((candidate: any, index: number) => (
+            {result.candidates?.map((candidate: GeminiCandidate, index: number) => (
               <div key={index} className="bg-white p-4 rounded border">
-                {candidate.content?.parts?.map((part: any, partIndex: number) => (
+                {candidate.content?.parts?.map((part: GeminiPart, partIndex: number) => (
                   <div key={partIndex} className="text-gray-700 whitespace-pre-wrap">
                     {part.text}
                   </div>

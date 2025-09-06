@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Build the parts array - always include text, optionally include image
-    const parts: any[] = [{ text: text }]
+    const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [{ text: text }]
     
     if (image && mimeType) {
       parts.push({
