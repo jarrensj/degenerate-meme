@@ -4,6 +4,16 @@
   --background: #fdfcf8;
   --foreground: #4a4a4a;
   --sketch-border: #6b6b6b;
+  
+  /* Matcha theme colors */
+  --matcha-green: #5cb3a6;
+  --matcha-light: #7ec5ba;
+  --matcha-dark: #4a9b8e;
+  --warm-white: #fdfcf8;
+  --soft-gray: #d1d5db;
+  --medium-gray: #9ca3af;
+  --soft-charcoal: #374151;
+  --sketch-gray: #6b7280;
 }
 
 @theme inline {
@@ -18,6 +28,16 @@
     --background: #1a1a1a;
     --foreground: #e0e0e0;
     --sketch-border: #666;
+    
+    /* Dark mode matcha colors */
+    --matcha-green: #4a9b8e;
+    --matcha-light: #5cb3a6;
+    --matcha-dark: #3d8579;
+    --warm-white: #2a2a2a;
+    --soft-gray: #4b5563;
+    --medium-gray: #6b7280;
+    --soft-charcoal: #d1d5db;
+    --sketch-gray: #9ca3af;
   }
 }
 
@@ -47,4 +67,46 @@ body {
   opacity: 0.2;
   transform: rotate(0.2deg);
   z-index: -1;
+}
+
+/* Progress button animations */
+@keyframes gradient-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes gentle-drift {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes diagonal-stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 0;
+  }
+}
+
+.matcha-progress-button {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--warm-white);
+  border: 2px solid var(--soft-gray);
+  transition: all 0.3s ease;
+}
+
+.matcha-progress-button:hover {
+  border-color: var(--matcha-green);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(92, 179, 166, 0.15);
 }

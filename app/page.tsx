@@ -298,9 +298,77 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading || !uploadedImage || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
-          className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition-colors"
+          className="matcha-progress-button w-full py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed sketch-element"
         >
-          {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
+          {/* Calculate form completion progress */}
+          {(() => {
+            const hasImage = !!uploadedImage;
+            const hasPrompt = useCustomInput ? !!customText.trim() : !!selectedOption.trim();
+            const hasImageCount = imageCount > 0;
+            
+            const completedSteps = [hasImage, hasPrompt, hasImageCount].filter(Boolean).length;
+            const formProgress = (completedSteps / 3) * 100;
+            
+            return (
+              <>
+                {/* Progress fill - shows form completion + full when loading */}
+                <div 
+                  className="absolute inset-1 transition-all duration-700 ease-out rounded-md overflow-hidden"
+                  style={{ 
+                    width: loading ? 'calc(100% - 8px)' : `calc(${formProgress}% - 8px)`,
+                  }}
+                >
+                  {/* Animated matcha gradient wave background */}
+                  <div
+                    className="absolute inset-0 rounded-md"
+                    style={{
+                      background: loading 
+                        ? `linear-gradient(135deg, 
+                            #5cb3a6 0%, 
+                            #7ec5ba 25%,
+                            #4a9b8e 50%,
+                            #7ec5ba 75%, 
+                            #5cb3a6 100%)`
+                        : `linear-gradient(135deg, 
+                            rgba(92, 179, 166, 0.6) 0%, 
+                            rgba(92, 179, 166, 0.8) 50%,
+                            rgba(92, 179, 166, 0.6) 100%)`,
+                      backgroundSize: loading ? '200% 100%' : '100% 100%',
+                      animation: loading ? 'gradient-wave 2.5s ease-in-out infinite' : 'none'
+                    }}
+                  />
+                  
+                  {/* Subtle textured overlay for hand-drawn feel */}
+                  {loading && (
+                    <div 
+                      className="absolute inset-0 opacity-20 rounded-md"
+                      style={{
+                        background: `repeating-linear-gradient(
+                          135deg,
+                          transparent,
+                          transparent 12px,
+                          rgba(92, 179, 166, 0.1) 12px,
+                          rgba(92, 179, 166, 0.1) 24px
+                        )`,
+                        animation: 'gentle-drift 3s ease-in-out infinite'
+                      }}
+                    />
+                  )}
+                </div>
+                
+                {/* Button content */}
+                <span 
+                  className="relative z-10 font-medium tracking-wide transition-colors duration-300"
+                  style={{
+                    color: loading ? 'var(--matcha-dark)' : 'var(--soft-charcoal)',
+                    textShadow: loading ? '0 0 2px rgba(255,255,255,0.8)' : 'none'
+                  }}
+                >
+                  {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
+                </span>
+              </>
+            );
+          })()}
         </button>
       </form>
 
