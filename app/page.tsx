@@ -162,10 +162,10 @@ export default function Home() {
         degenerate.meme
       </h1>
       <p className="text-lg mb-8 text-gray-600">
-        generate memes with your image
+        generate memes
       </p>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
         <div>
           <div className="flex items-center justify-between mb-3">
             <label className="block text-sm font-medium text-gray-700">
@@ -207,27 +207,33 @@ export default function Home() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-3">
             Number of images to generate
           </label>
-          <select
-            value={imageCount}
-            onChange={(e) => setImageCount(Number(e.target.value))}
-            disabled={loading}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-4"
-          >
-            <option value={1}>1 image</option>
-            <option value={2}>2 images</option>
-            <option value={3}>3 images</option>
-            <option value={4}>4 images</option>
-          </select>
+          <div className="flex gap-2">
+            {[1, 2, 3, 4].map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => setImageCount(num)}
+                disabled={loading}
+                className={`flex-1 py-2 px-3 text-sm font-medium rounded-lg border transition-colors ${
+                  imageCount === num
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {uploadedImagePreview ? 'Replace your character/subject' : 'Upload your character/subject (optional)'}
           </label>
-          <p className="text-xs text-gray-500 mb-2">
+          <p className="text-xs text-gray-500 mb-3">
             Upload one image of the character or subject you want to use in your stickers
           </p>
           
