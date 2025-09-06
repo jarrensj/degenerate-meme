@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { stickerOptions } from '../data/stickerOptions'
 
@@ -13,18 +13,63 @@ export default function Home() {
   const [imageDataArray, setImageDataArray] = useState<string[]>([])
   const [imageCount, setImageCount] = useState<number>(1)
   const [error, setError] = useState('')
-  const [uploadedImage, setUploadedImage] = useState<File | null>(null)
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
+  const [uploadedImageType, setUploadedImageType] = useState<string | null>(null)
   const [copySuccess, setCopySuccess] = useState<{[key: string]: boolean}>({})
   const [isDragOver, setIsDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Local storage helpers
+  const saveImageToLocalStorage = (file: File, preview: string) => {
+    try {
+      const imageData = {
+        name: file.name,
+        type: file.type,
+        preview: preview
+      }
+      localStorage.setItem('uploadedImage', JSON.stringify(imageData))
+    } catch (error) {
+      console.warn('Failed to save image to localStorage:', error)
+    }
+  }
+
+  const loadImageFromLocalStorage = () => {
+    try {
+      const savedImageData = localStorage.getItem('uploadedImage')
+      if (savedImageData) {
+        const imageData = JSON.parse(savedImageData)
+        setUploadedImagePreview(imageData.preview)
+        setUploadedImageType(imageData.type)
+      }
+    } catch (error) {
+      console.warn('Failed to load image from localStorage:', error)
+      // Clear corrupted data
+      localStorage.removeItem('uploadedImage')
+    }
+  }
+
+  const clearImageFromLocalStorage = () => {
+    try {
+      localStorage.removeItem('uploadedImage')
+    } catch (error) {
+      console.warn('Failed to clear image from localStorage:', error)
+    }
+  }
+
+  // Load saved image on component mount
+  useEffect(() => {
+    loadImageFromLocalStorage()
+  }, [])
+
   const processImageFile = (file: File) => {
     if (file && file.type.startsWith('image/')) {
-      setUploadedImage(file)
+      setUploadedImageType(file.type)
       const reader = new FileReader()
       reader.onload = (e) => {
-        setUploadedImagePreview(e.target?.result as string)
+        const preview = e.target?.result as string
+        setUploadedImagePreview(preview)
+        // Save to localStorage
+        saveImageToLocalStorage(file, preview)
       }
       reader.readAsDataURL(file)
     }
@@ -71,8 +116,10 @@ export default function Home() {
   }
 
   const removeImage = () => {
-    setUploadedImage(null)
     setUploadedImagePreview(null)
+    setUploadedImageType(null)
+    // Clear from localStorage
+    clearImageFromLocalStorage()
     // Reset the file input value so the same file can be uploaded again
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -112,17 +159,8 @@ export default function Home() {
 
     try {
       let imageBase64 = null
-      if (uploadedImage) {
-        const reader = new FileReader()
-        imageBase64 = await new Promise<string>((resolve) => {
-          reader.onload = () => {
-            const result = reader.result as string
-            // Remove the data URL prefix to get just the base64 data
-            const base64Data = result.split(',')[1]
-            resolve(base64Data)
-          }
-          reader.readAsDataURL(uploadedImage)
-        })
+      if (uploadedImagePreview) {
+        imageBase64 = uploadedImagePreview.split(',')[1]
       }
 
       const response = await fetch('/api/degenerate', {
@@ -133,7 +171,7 @@ export default function Home() {
         body: JSON.stringify({ 
           text: textToSend,
           image: imageBase64,
-          mimeType: uploadedImage?.type,
+          mimeType: uploadedImageType,
           imageCount: imageCount
         }),
       })
@@ -297,12 +335,12 @@ export default function Home() {
         
         <button
           type="submit"
-          disabled={loading || !uploadedImage || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
+          disabled={loading || !uploadedImagePreview || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
           className="matcha-progress-button w-full py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed sketch-element"
         >
             {/* Calculate form completion progress */}
             {(() => {
-              const hasImage = !!uploadedImage;
+              const hasImage = !!uploadedImagePreview;
               const hasPrompt = useCustomInput ? !!customText.trim() : !!selectedOption.trim();
               const hasImageCount = imageCount > 0;
 
@@ -346,7 +384,6 @@ export default function Home() {
                         }}
                       />
                   
-                  {/* Subtle textured overlay for hand-drawn feel */}
                   {loading && (
                     <div 
                       className="absolute inset-0 opacity-20 rounded-md"
