@@ -162,10 +162,76 @@ export default function Home() {
         degenerate.meme
       </h1>
       <p className="text-lg mb-8 text-gray-600">
-        generate memes
+        turn your images into memes and stickers
       </p>
 
       <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {uploadedImagePreview ? 'Replace your character' : 'Upload your character'}
+          </label>
+          
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onPaste={handlePaste}
+            tabIndex={0}
+            className={`relative border-2 border-dashed rounded-lg transition-colors ${
+              isDragOver 
+                ? 'border-blue-400 bg-blue-50' 
+                : 'border-gray-300 hover:border-gray-400'
+            } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${
+              uploadedImagePreview ? 'p-2' : 'p-6'
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={loading}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            
+            {uploadedImagePreview ? (
+              <div className="relative">
+                <Image 
+                  src={uploadedImagePreview} 
+                  alt="uploaded preview" 
+                  width={400}
+                  height={192}
+                  className="w-full h-48 object-contain rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg"
+                >
+                  ×
+                </button>
+                <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                  Click, drag, or paste to replace
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 text-center">
+                <div className="text-gray-400">
+                  <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-gray-600">
+                    {isDragOver ? 'Drop image here' : 'Click to upload, drag & drop, or paste'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div>
           <div className="flex items-center justify-between mb-3">
             <label className="block text-sm font-medium text-gray-700">
@@ -228,79 +294,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {uploadedImagePreview ? 'Replace your character/subject' : 'Upload your character/subject (optional)'}
-          </label>
-          <p className="text-xs text-gray-500 mb-3">
-            Upload one image of the character or subject you want to use in your stickers
-          </p>
-          
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onPaste={handlePaste}
-            tabIndex={0}
-            className={`relative border-2 border-dashed rounded-lg transition-colors ${
-              isDragOver 
-                ? 'border-blue-400 bg-blue-50' 
-                : 'border-gray-300 hover:border-gray-400'
-            } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${
-              uploadedImagePreview ? 'p-2' : 'p-6'
-            }`}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              disabled={loading}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-            
-            {uploadedImagePreview ? (
-              <div className="relative">
-                <Image 
-                  src={uploadedImagePreview} 
-                  alt="uploaded preview" 
-                  width={400}
-                  height={192}
-                  className="w-full h-48 object-contain rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 shadow-lg"
-                >
-                  ×
-                </button>
-                <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                  Click, drag, or paste to replace
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2 text-center">
-                <div className="text-gray-400">
-                  <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="text-sm font-medium text-gray-600">
-                    {isDragOver ? 'Drop image here' : 'Click to upload, drag & drop, or paste'}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
-              </div>
-            )}
-          </div>
-        </div>
         
         <button
           type="submit"
-          disabled={loading || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
+          disabled={loading || !uploadedImage || (!useCustomInput && !selectedOption.trim()) || (useCustomInput && !customText.trim())}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
         >
           {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
