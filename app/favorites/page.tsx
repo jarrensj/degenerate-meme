@@ -157,25 +157,25 @@ export default function FavoritesPage() {
   }
 
   return (
-    <main className="min-h-screen p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
+    <main className="min-h-screen bg-stone-50 p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
       <div className="w-full flex items-center justify-between mb-8">
         <Link
           href="/"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-4 py-2 bg-stone-100 text-stone-600 rounded-lg hover:bg-stone-200 transition-colors border border-stone-200 shadow-sm font-medium"
         >
           ← Back to Generator
         </Link>
         <div className="flex gap-2">
           <button
             onClick={debugLocalStorage}
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
+            className="px-4 py-2 bg-stone-200 text-stone-500 rounded-lg hover:bg-stone-300 transition-colors text-sm border border-stone-300"
           >
             Debug
           </button>
           {favorites.length > 0 && (
             <button
               onClick={clearAllFavorites}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="px-4 py-2 bg-stone-300 text-stone-700 rounded-lg hover:bg-stone-400 transition-colors border border-stone-300 font-medium"
             >
               Clear All
             </button>
@@ -183,10 +183,10 @@ export default function FavoritesPage() {
         </div>
       </div>
 
-      <h1 className="text-4xl font-bold mb-2">
+      <h1 className="text-4xl font-bold mb-2 text-stone-700">
         ❤️ Your Favorite Memes
       </h1>
-      <p className="text-lg mb-8 text-gray-600">
+      <p className="text-lg mb-8 text-stone-600">
         {favorites.length === 0 
           ? 'No favorites yet. Generate some memes and save your favorites!'
           : `You have ${favorites.length} favorite meme${favorites.length === 1 ? '' : 's'}`
@@ -194,26 +194,26 @@ export default function FavoritesPage() {
       </p>
       
       {/* Debug info */}
-      <div className="mb-4 p-2 bg-gray-100 text-xs text-gray-600">
+      <div className="mb-4 p-2 bg-stone-100 text-xs text-stone-500 rounded border border-stone-200">
         Debug: favorites.length = {favorites.length}, localStorage key exists: {localStorage.getItem('favoriteMemes') ? 'yes' : 'no'}
       </div>
 
       {favorites.length === 0 ? (
-        <div className="text-center py-16">
+        <div className="text-center py-16 bg-white rounded-lg border border-stone-200 shadow-sm">
           <div className="text-6xl mb-4">🤍</div>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">No favorites yet</h2>
-          <p className="text-gray-500 mb-6">
+          <h2 className="text-2xl font-semibold mb-4 text-stone-700">No favorites yet</h2>
+          <p className="text-stone-500 mb-6">
             Start generating memes and click the favorite button to save them here!
           </p>
           <Link
             href="/"
-            className="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+            className="inline-block px-6 py-3 bg-stone-600 text-stone-50 rounded-lg hover:bg-stone-700 transition-colors font-medium shadow-sm"
           >
             Generate Memes
           </Link>
         </div>
       ) : (
-        <div className="mt-6 p-6 bg-gray-50 border border-gray-200 rounded-lg w-full max-w-4xl">
+        <div className="mt-6 p-6 bg-white border border-stone-200 rounded-lg w-full max-w-4xl shadow-sm">
           <div className={`grid gap-4 mb-4 ${
             favorites.length === 1 ? 'grid-cols-1 justify-items-center' :
             favorites.length === 2 ? 'grid-cols-2' :
@@ -233,30 +233,30 @@ export default function FavoritesPage() {
                   <a
                     href={`data:image/png;base64,${favorite.imageData}`}
                     download={`favorite-meme-${index + 1}.png`}
-                    className="px-3 py-1 bg-green-500 text-white text-sm rounded hover:bg-green-600 transition-colors"
+                    className="px-3 py-1 bg-stone-600 text-stone-50 text-sm rounded hover:bg-stone-700 transition-colors font-medium shadow-sm"
                   >
                     Download
                   </a>
                   <button
                     onClick={() => copyImageToClipboard(favorite.imageData, `fav-${index}`)}
-                    className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                    className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded hover:bg-stone-200 transition-colors border border-stone-200"
                   >
                     {copySuccess[`fav-${index}`] ? '✓ Copied!' : 'Copy'}
                   </button>
                   <button
                     onClick={() => removeFavorite(favorite.imageData)}
-                    className="flex items-center group px-3 py-1 text-sm transition-colors"
+                    className="flex items-center group px-3 py-1 text-sm transition-colors bg-stone-50 hover:bg-stone-100 rounded border border-stone-200"
                   >
                     <Star 
                       size={14} 
-                      className="mr-1 text-yellow-500 fill-yellow-500 group-hover:text-red-500 group-hover:fill-red-500 transition-colors" 
+                      className="mr-1 text-stone-400 fill-stone-400 group-hover:text-stone-600 group-hover:fill-stone-600 transition-colors" 
                     />
-                    <span className="text-xs text-yellow-500 group-hover:text-red-500 transition-colors">
+                    <span className="text-xs text-stone-500 group-hover:text-stone-700 transition-colors">
                       Remove
                     </span>
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 text-center mt-2">
+                <p className="text-xs text-stone-400 text-center mt-2">
                   Saved {new Date(favorite.timestamp).toLocaleDateString()}
                 </p>
               </div>

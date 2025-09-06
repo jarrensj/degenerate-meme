@@ -120,11 +120,11 @@ export default function Home() {
     <main className="min-h-screen p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto relative">
       <Link
         href="/favorites"
-        className="absolute top-8 right-8 flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+        className="absolute top-8 right-8 flex items-center gap-2 px-4 py-2 bg-stone-100 text-stone-600 rounded-lg hover:bg-stone-200 transition-colors border border-stone-200 shadow-sm"
       >
-        <span>Favorites</span>
+        <span className="text-sm font-medium">Favorites</span>
         {favoritesCount > 0 && (
-          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+          <span className="bg-stone-500 text-stone-50 text-xs px-2 py-1 rounded-full min-w-[20px] text-center font-medium">
             {favoritesCount}
           </span>
         )}
