@@ -21,6 +21,7 @@ export default function Home() {
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null)
   const [uploadedImageType, setUploadedImageType] = useState<string | null>(null)
   const [jsConfetti, setJsConfetti] = useState<JSConfetti | null>(null)
+  const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set())
 
   // Initialize confetti
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function Home() {
     setLoading(true)
     setError('')
     setImageDataArray([])
+    setSelectedImages(new Set())
 
     try {
       let imageBase64 = null
@@ -141,7 +143,11 @@ export default function Home() {
       </form>
 
       <ErrorDisplay error={error} />
-      <ResultsDisplay imageDataArray={imageDataArray} />
+      <ResultsDisplay 
+        imageDataArray={imageDataArray} 
+        selectedImages={selectedImages}
+        setSelectedImages={setSelectedImages}
+      />
 
     </main>
   );
