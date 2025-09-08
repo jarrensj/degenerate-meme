@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate imageCount
-    if (imageCount < 1 || imageCount > 4) {
-      return NextResponse.json({ error: "Image count must be between 1 and 4" }, { status: 400 })
+    if (imageCount < 1 || imageCount > 20) {
+      return NextResponse.json({ error: "Image count must be between 1 and 20" }, { status: 400 })
     }
 
     // Get different prompts for each image based on quantity

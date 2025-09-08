@@ -101,7 +101,7 @@ export default function GenerateButton({
               textShadow: loading ? '0 0 2px rgba(255,255,255,0.8)' : 'none'
             }}
           >
-            {loading ? 'Generating Image...' : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}`}
+{loading ? (imageCount > 4 ? 'Generating Batch...' : 'Generating Image...') : `Generate ${imageCount === 1 ? 'Image' : `${imageCount} Images`}${imageCount > 4 ? ' (in batches)' : ''}`}
           </span>
         </>
       );
