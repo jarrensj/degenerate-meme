@@ -22,16 +22,16 @@ install dependencies:
 npm install
 ```
 
-run the development server:
-
-```bash
-npm run dev
-```
-
 set up your env variables and fill that out:
 
 ```bash
 cp .env.example .env
+```
+
+run the development server:
+
+```bash
+npm run dev
 ```
 
 
