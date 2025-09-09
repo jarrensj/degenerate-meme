@@ -28,4 +28,11 @@ run the development server:
 npm run dev
 ```
 
+set up your env variables and fill that out:
+
+```bash
+cp .env.example .env
+```
+
+
 open [http://localhost:3000](http://localhost:3000) 
