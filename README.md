@@ -1,4 +1,4 @@
-# degenerative-meme
+# degenerate-meme
 
 A custom sticker generator that creates unique stickers! 
 
